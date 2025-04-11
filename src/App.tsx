@@ -1,39 +1,43 @@
+import { useEffect, useState } from "react";
+import { database } from "./config/firebase";
+import { ref, onValue } from "firebase/database";
+import { DeviceReadings } from "./types/device.types";
 
 function App() {
+  const [reading, setReading] = useState<DeviceReadings | null>(null);
+
+  useEffect(() => {
+    const deviceMac = "e4:65:b8:d9:95:94"; // MAC Address device kamu
+    const readingsRef = ref(database, `voltage_controller/devices/${deviceMac}/readings`);
+
+    const unsubscribe = onValue(readingsRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setReading(data);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-300 p-4">
-      <div className="flex flex-col md:flex-row gap-4 w-full max-w-screen-xl h-full">
-        {/* Kiri */}
-        <div className="bg-red-300 flex-1 basis-[40%] rounded-lg flex items-center justify-center text-white text-3xl font-bold md:h-auto md:min-h-[424px]">
-          1
-        </div>
+    <div className="p-4">
+      <h1 className="text-xl font-bold mb-4">Realtime Voltage Controller Data</h1>
 
-        {/* Kanan */}
-        <div className="flex flex-col flex-1 basis-[60%] gap-4">
-          {/* Atas kanan */}
-          <div className="bg-green-300 h-[200px] rounded-lg flex items-center justify-center text-white text-3xl font-bold">
-            2
-          </div>
-
-          {/* Bawah kanan */}
-          <div className="flex flex-col md:flex-row gap-4 flex-1">
-            {/* Kiri bawah kanan */}
-            <div className="bg-pink-400 h-[100px] md:h-auto flex-1 rounded-lg flex items-center justify-center text-white text-3xl font-bold">
-              3
-            </div>
-
-            {/* Kanan bawah kanan */}
-            <div className="flex flex-col flex-1 gap-4">
-              <div className="bg-blue-400 flex-1 rounded-lg flex items-center justify-center text-white text-2xl font-bold h-[100px] md:h-auto">
-                4a
-              </div>
-              <div className="bg-yellow-400 flex-1 rounded-lg flex items-center justify-center text-white text-2xl font-bold h-[100px] md:h-auto">
-                4b
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {reading ? (
+        <ul className="space-y-1 bg-gray-100 rounded p-4 shadow max-w-md">
+          <li>Voltage: {reading.voltage} V</li>
+          <li>Current: {reading.current} A</li>
+          <li>Power: {reading.power} W</li>
+          <li>Energy: {reading.energy} Wh</li>
+          <li>Frequency: {reading.frequency} Hz</li>
+          <li>Humidity: {reading.humidity} %</li>
+          <li>Temperature: {reading.temperature} °C</li>
+          <li>Timestamp: {new Date(reading.timestamp).toLocaleString()}</li>
+        </ul>
+      ) : (
+        <p>Loading data...</p>
+      )}
     </div>
   );
 }
