@@ -34,7 +34,7 @@ const VoltageGauge: React.FC<VoltageGaugeProps> = ({
     <div className="bg-white p-6 rounded-lg shadow-md h-full">
       <h2 className="text-xl font-semibold mb-4">Voltage Monitor</h2>
       
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center mt-">
         <div className="relative w-48 h-48 mb-4">
           {/* Create circular gauge */}
           <svg viewBox="0 0 100 100" className="w-full h-full">

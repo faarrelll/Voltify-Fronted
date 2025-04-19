@@ -46,6 +46,7 @@ export const deviceService = {
   },
 
   // Subscribe to real-time history updates
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   subscribeToDeviceHistory: (macAddress: string, callback: (data: any) => void) => {
     const historyRef = ref(database, `voltage_controller/history/${macAddress}`);
     onValue(historyRef, (snapshot) => {

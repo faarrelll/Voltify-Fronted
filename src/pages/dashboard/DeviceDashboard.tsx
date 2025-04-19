@@ -12,47 +12,42 @@ const DeviceDashboard: React.FC = () => {
   const [device, setDevice] = useState<Device | null>(null);
   const [historyData, setHistoryData] = useState<HistoryEntry[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+
 
   useEffect(() => {
-    const fetchDeviceData = async () => {
-      if (!deviceId) return;
-      
-      try {
-        setLoading(true);
-        // Fetch device details
-        const deviceDetails = await deviceService.getDeviceDetails(deviceId);
-        if (deviceDetails) {
-          setDevice(deviceDetails);
-        } else {
-          setError('Device not found');
-        }
+    if (!deviceId) return;
+    
+    setLoading(true);
+    
+    // Subscribe to real-time device updates
+    const deviceUnsubscribe = deviceService.subscribeToDevice(deviceId, (deviceData) => {
+      setDevice(deviceData);
+      setLoading(false);
+    });
+    
+    // Subscribe to real-time history updates
+    const historyUnsubscribe = deviceService.subscribeToDeviceHistory(deviceId, (historyData) => {
+      if (historyData) {
+        // Convert object to array and ensure timestamp is a number
+        const historyArray = Object.entries(historyData).map(([timestamp, entry]) => {
+          if (typeof entry === 'object' && entry !== null) {
+            return {
+              ...(entry as HistoryEntry),
+              timestamp: parseInt(timestamp, 10)
+            };
+          }
+          return null;
+        }).filter((item): item is HistoryEntry & { timestamp: number } => item !== null);
         
-        // Fetch device history
-        const history = await deviceService.getDeviceHistory(deviceId);
-        if (history) {
-          // Convert object to array and ensure timestamp is a number
-          const historyArray = Object.entries(history).map(([timestamp, entry]) => {
-            if (typeof entry === 'object' && entry !== null) {
-              return {
-                ...(entry as HistoryEntry),
-                timestamp: parseInt(timestamp, 10)
-              };
-            }
-            return null;
-          }).filter((item): item is HistoryEntry & { timestamp: number } => item !== null);
-          
-          setHistoryData(historyArray);
-        }
-      } catch (err) {
-        setError('Failed to load device data');
-        console.error(err);
-      } finally {
-        setLoading(false);
+        setHistoryData(historyArray);
       }
+    });
+    
+    // Cleanup subscriptions when component unmounts
+    return () => {
+      deviceUnsubscribe();
+      historyUnsubscribe();
     };
-
-    fetchDeviceData();
   }, [deviceId]);
 
   if (loading) {
@@ -65,11 +60,11 @@ const DeviceDashboard: React.FC = () => {
     );
   }
 
-  if (error || !device) {
+  if (!device) {
     return (
       <MainLayout>
         <div className="bg-red-100 p-4 rounded-md text-red-700">
-          {error || 'Device not found'}
+          {'Device not found'}
         </div>
       </MainLayout>
     );
