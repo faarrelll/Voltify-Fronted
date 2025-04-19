@@ -6,6 +6,7 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Home from "./pages/Home";
 import DeviceDashboard from "./pages/dashboard/DeviceDashboard";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const App: React.FC = () => {
@@ -24,6 +25,14 @@ const App: React.FC = () => {
         element={
           <ProtectedRoute>
             <DeviceDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <Settings />
           </ProtectedRoute>
         }
       />
