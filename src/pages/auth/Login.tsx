@@ -3,13 +3,11 @@ import { useNavigate } from "react-router";
 import LoginForm from "../../components/auth/LoginForm";
 import AuthLayout from "../../components/auth/LayoutAuth";
 
-interface loginState{
-  state: boolean;
-}
 
-export const Login: React.FC<loginState> = ({state}) => {
+
+export const Login: React.FC = () => {
   const navigate = useNavigate();
-  const [showLoginForm, setShowLoginForm] = useState(state);
+  const [showLoginForm, setShowLoginForm] = useState(false);
 
   const handleLoginSuccess = () => {
     navigate("/");

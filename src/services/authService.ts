@@ -9,6 +9,7 @@ import {
 import { ref, set, get } from 'firebase/database';
 import { auth, database } from '../config/firebase';
 import { UserDevices } from '../types/auth.types';
+import { deviceService } from './deviceService';
 
 export const authService = {
   // Login dengan email dan password
@@ -54,10 +55,20 @@ export const authService = {
   },
 
   // Menambahkan device ke user
-  addDeviceToUser: async (userId: string, deviceId: string, deviceName: string) => {
-    await set(ref(database, `users/${userId}/devices/${deviceId}`), {
+  addDeviceToUser: async (userId: string, macAddress: string, deviceName: string) => {
+    // First check if the device exists
+    const deviceExists = await deviceService.checkDeviceExists(macAddress);
+    
+    if (!deviceExists) {
+      throw new Error('Device not found. Please check the MAC address and try again.');
+    }
+    
+    // If we get here, the device exists, so add it to the user
+    await set(ref(database, `users/${userId}/devices/${macAddress}`), {
       name: deviceName,
       addedAt: Date.now()
     });
+    
+    return true;
   }
 };

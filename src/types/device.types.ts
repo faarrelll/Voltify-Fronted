@@ -19,7 +19,6 @@ export interface DeviceInfo {
   export interface DeviceSettings {
     targetVoltage: number;
     voltageTolerance: number;
-    location?: string;
   }
   
   export interface DeviceState {
