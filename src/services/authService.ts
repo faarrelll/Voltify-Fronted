@@ -6,7 +6,7 @@ import {
   updateProfile,
   sendPasswordResetEmail
 } from 'firebase/auth';
-import { ref, set, get } from 'firebase/database';
+import { ref, set, get, onValue, off } from 'firebase/database';
 import { auth, database } from '../config/firebase';
 import { UserDevices } from '../types/auth.types';
 import { deviceService } from './deviceService';
@@ -52,6 +52,21 @@ export const authService = {
       return snapshot.val() as UserDevices;
     }
     return {};
+  },
+
+  // Subscribe to real-time user devices updates
+  subscribeToUserDevices: (userId: string, callback: (devices: UserDevices) => void) => {
+    const devicesRef = ref(database, `users/${userId}/devices`);
+    onValue(devicesRef, (snapshot) => {
+      if (snapshot.exists()) {
+        callback(snapshot.val() as UserDevices);
+      } else {
+        callback({});
+      }
+    });
+    
+    // Return unsubscribe function
+    return () => off(devicesRef);
   },
 
   // Menambahkan device ke user

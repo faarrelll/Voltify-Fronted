@@ -1,5 +1,5 @@
 // src/services/deviceService.ts
-import { ref, get, set } from 'firebase/database';
+import { ref, get, set, onValue, off } from 'firebase/database';
 import { database } from '../config/firebase';
 import { Device, DeviceSettings } from '../types/device.types';
 
@@ -22,6 +22,18 @@ export const deviceService = {
     return null;
   },
 
+  // Subscribe to real-time device updates
+  subscribeToDevice: (macAddress: string, callback: (data: Device) => void) => {
+    const deviceRef = ref(database, `voltage_controller/devices/${macAddress}`);
+    onValue(deviceRef, (snapshot) => {
+      if (snapshot.exists()) {
+        callback(snapshot.val() as Device);
+      }
+    });
+    
+    return () => off(deviceRef); // Return unsubscribe function
+  },
+
   // Get device history by MAC address
   getDeviceHistory: async (macAddress: string) => {
     const historyRef = ref(database, `voltage_controller/history/${macAddress}`);
@@ -31,6 +43,18 @@ export const deviceService = {
       return snapshot.val();
     }
     return {};
+  },
+
+  // Subscribe to real-time history updates
+  subscribeToDeviceHistory: (macAddress: string, callback: (data: any) => void) => {
+    const historyRef = ref(database, `voltage_controller/history/${macAddress}`);
+    onValue(historyRef, (snapshot) => {
+      if (snapshot.exists()) {
+        callback(snapshot.val());
+      }
+    });
+    
+    return () => off(historyRef); // Return unsubscribe function
   },
 
   // Update device settings

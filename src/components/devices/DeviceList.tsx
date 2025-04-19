@@ -7,10 +7,10 @@ import { authService } from "../../services/authService";
 
 interface DeviceListProps {
   devices: UserDevices;
-  onDeviceAdded: () => void; // Add callback to refresh device list
+  onDeviceAdded: () => void; // Keeping this for backward compatibility
 }
 
-const DeviceList: React.FC<DeviceListProps> = ({ devices, onDeviceAdded }) => {
+const DeviceList: React.FC<DeviceListProps> = ({ devices }) => {
   const [newDeviceId, setNewDeviceId] = useState("");
   const [newDeviceName, setNewDeviceName] = useState("");
   const [isAddingDevice, setIsAddingDevice] = useState(false);
@@ -38,9 +38,6 @@ const DeviceList: React.FC<DeviceListProps> = ({ devices, onDeviceAdded }) => {
         // Reset form
         setNewDeviceId("");
         setNewDeviceName("");
-        
-        // Call the callback to refresh devices
-        onDeviceAdded();
         
         // Close the form after a delay
         setTimeout(() => {
