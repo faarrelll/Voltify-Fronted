@@ -1,54 +1,94 @@
-# React + TypeScript + Vite
+# Voltage Controller System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A web-based IoT application for monitoring and controlling voltage stabilizers and related devices. This React application provides real-time data visualization, device management, and user authentication.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **User Authentication**: Secure login, registration, and password reset functionality
+- **Device Management**: Add, view, and manage multiple devices
+- **Real-time Monitoring**: View voltage, current, power, energy, temperature, and humidity readings
+- **Interactive Dashboard**: Charts and gauges to visualize device data
+- **Responsive Design**: Works on mobile and desktop devices
 
-## Expanding the ESLint configuration
+## Project Structure
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```
+src/
+├── assets/ - Images and static resources
+├── components/
+│   ├── auth/ - Authentication related components
+│   ├── dashboard/ - Device dashboard components
+│   ├── devices/ - Device listing and management
+│   └── layout/ - Page layout components
+├── config/ - Firebase configuration
+├── contexts/ - React context providers
+├── hooks/ - Custom React hooks
+├── pages/ - Main application pages
+│   ├── auth/ - Login and registration pages
+│   ├── dashboard/ - Device monitoring pages
+│   ├── Home.tsx - Main device listing page
+|   ├── Settings.tsx - Settings page
+|   └── NotFound.tsx - NotFound page
+├── services/ - API services for auth and devices
+└── types/ - TypeScript type definitions
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Technologies Used
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- **React**: Frontend framework
+- **TypeScript**: Type safety for components and data
+- **Firebase**: Authentication and real-time database
+- **Recharts**: Data visualization
+- **React Router**: Navigation
+- **Tailwind CSS**: Styling
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+## Installation
+
+1. Clone the repository
+2. Install dependencies:
+   ```
+   npm install
+   ```
+3. Create a `.env` file in the root directory with your Firebase configuration:
+   ```
+   VITE_FIREBASE_API_KEY=your_api_key
+   VITE_FIREBASE_AUTH_DOMAIN=your_auth_domain
+   VITE_FIREBASE_DATABASE_URL=your_database_url
+   VITE_FIREBASE_PROJECT_ID=your_project_id
+   VITE_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+   VITE_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+   VITE_FIREBASE_APP_ID=your_app_id
+   VITE_FIREBASE_MEASUREMENT_ID=your_measurement_id
+   ```
+4. Start the development server:
+   ```
+   npm run dev
+   ```
+
+## Authentication Flow
+
+The application uses Firebase Authentication with the following flow:
+1. Users can register with email/password
+2. Login with existing credentials
+3. Reset password via email link
+4. Protected routes ensure authenticated access
+
+## Device Management
+
+Devices are identified by MAC address and have the following structure:
+- Basic information (name, type, firmware version)
+- Current readings (voltage, current, power, etc.)
+- Status information (online/offline, last seen)
+- Configuration settings (target voltage, tolerance)
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/new-feature`
+3. Commit your changes: `git commit -m 'Add new feature'`
+4. Push to the branch: `git push origin feature/new-feature`
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
