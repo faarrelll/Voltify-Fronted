@@ -84,8 +84,8 @@ const LayoutAuth: React.FC<AuthLayoutProps> = ({
                   Stabilize your system, simplify your life.
                 </h1>
                 <p className="mb-6 text-md">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-                  lobortis...
+                Unlock efficiency and peace of mind.
+                Manage your projects smarter, faster, and stress-free.
                 </p>
                 <Link
                   to={"/register"}
