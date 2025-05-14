@@ -7,8 +7,7 @@ import logo from "../../assets/images/image-removebg-preview (1).png";
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [success, setSuccess] = useState<string | null>(null);
+  const [success] = useState<string | null>(null);
   const { resetPassword, error, setError } = useAuth();
   const navigate = useNavigate();
 
