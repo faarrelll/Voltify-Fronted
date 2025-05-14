@@ -20,6 +20,8 @@ export interface AuthContextType {
     register: (email: string, password: string, name: string) => Promise<void>;
     logout: () => Promise<void>;
     resetPassword: (email: string) => Promise<void>;
+    loginWithGoogle: () => Promise<void>;
+    loginWithFacebook: () => Promise<void>;
     getUserDevices: () => Promise<UserDevices>;
     setError: (error: string | null) => void;
   }

@@ -1,6 +1,7 @@
 // src/components/auth/RegisterForm.tsx
 import React, { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
+import { Link } from "react-router";
 import logo from "../../assets/images/image-removebg-preview (1).png";
 
 interface RegisterFormProps {
@@ -46,20 +47,29 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
     }
   };
 
+  // Check if error is about email already in use
+  const isEmailInUseError = error?.includes("Email ini sudah terdaftar");
+
   return (
     <div className="relative z-10 flex items-center justify-center h-full px-8">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white shadow-md rounded-xl px-15 pt-6 pb-8 mb-4"
-      >
+      <div className="bg-white shadow-md rounded-xl px-15 pt-6 pb-8 mb-4">
         <div className="flex flex-col items-center">
           <img src={logo} alt="" className="w-[85px]" />
-          <p className="py-3 text-[#666666] text-xl mb-5">Register</p>
+          <p className="py-3 text-[#666666] text-xl mb-5">Create Account</p>
         </div>
 
+        <form onSubmit={handleSubmit}>
+
         {error && (
-          <div className="mb-4 p-3 bg-red-100 dark:bg-red-900 text-red-700">
-            {error}
+          <div className="mb-4 p-3 bg-red-100 dark:bg-red-900 text-red-700 rounded-md">
+            <p>{error}</p>
+            {isEmailInUseError && (
+              <p className="mt-2">
+                <Link to="/login" className="text-blue-600 hover:text-blue-800 underline">
+                  Klik di sini untuk login
+                </Link>
+              </p>
+            )}
           </div>
         )}
 
@@ -115,6 +125,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
               onChange={(e) => setPassword(e.target.value)}
               className="shadow appearance-none border rounded-xl w-full py-2 px-3 text-[#666666] leading-tight focus:outline-none focus:shadow-outline"
               required
+              minLength={6}
             />
           </div>
           <div className="w-1/2">
@@ -131,20 +142,38 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="shadow appearance-none border rounded-xl w-full py-2 px-3 text-[#666666] leading-tight focus:outline-none focus:shadow-outline"
               required
+              minLength={6}
             />
           </div>
+        </div>
+
+        <div className="text-sm text-gray-600 mb-4">
+          <ul className="list-disc list-inside">
+            <li>Password minimal 6 karakter</li>
+            <li>Gunakan kombinasi huruf dan angka untuk keamanan lebih baik</li>
+          </ul>
         </div>
 
         <div className="flex items-center justify-center">
           <button
             type="submit"
             disabled={isLoading}
-            className="border-1 w-full mt-4 py-3 rounded-3xl bg-black text-white transition-all duration-300 hover:bg-white hover:text-black"
+            className="border-1 w-full mt-4 py-3 rounded-3xl bg-black text-white transition-all duration-300 hover:bg-white hover:text-black disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? "Loading..." : "Sign Up"}
           </button>
         </div>
-      </form>
+
+        <div className="mt-4 text-center">
+          <p className="text-sm text-gray-600">
+            Sudah punya akun?{" "}
+            <Link to="/login" className="text-blue-600 hover:text-blue-800 underline">
+              Login di sini
+            </Link>
+          </p>
+        </div>
+        </form>
+      </div>
     </div>
   );
 };
