@@ -27,10 +27,8 @@ const ReadingsChart: React.FC<ReadingsChartProps> = ({ historyData }) => {
     { id: 'voltage', name: 'Voltage (V)', color: '#8884d8' },
     { id: 'current', name: 'Current (A)', color: '#82ca9d' },
     { id: 'power', name: 'Power (W)', color: '#ff7300' },
-    { id: 'energy', name: 'Energy (kWh)', color: '#0088fe' },
     { id: 'temperature', name: 'Temperature (°C)', color: '#ff8042' },
     { id: 'humidity', name: 'Humidity (%)', color: '#00C49F' },
-    { id: 'frequency', name: 'Frequency (Hz)', color: '#FFBB28' },
   ];
   
   const getCurrentReading = () => {
